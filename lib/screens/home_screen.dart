@@ -110,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen>
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: TextStyle(
+                          fontFamily: 'Poppins-Regular',
                           color: Colors.blue.shade900,
                           fontSize: 19,
                           fontWeight: FontWeight.bold,
@@ -118,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen>
                       const SizedBox(height: 4),
                       const Text(
                         'Have A Nice Day.',
-                        style: TextStyle(color: Colors.grey, fontSize: 16),
+                        style: TextStyle(color: Colors.grey, fontSize: 16, fontFamily: 'Poppins-Regular',),
                       ),
                     ],
                   ),
@@ -141,12 +142,13 @@ class _HomeScreenState extends State<HomeScreen>
                       Text(
                         "${today.day} ${_monthName(today.month)}, ${today.year}",
                         style: const TextStyle(
+                          fontFamily: 'Poppins-Regular',
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 4),
-                      const Text("Today", style: TextStyle(color: Colors.grey)),
+                      const Text("Today", style: TextStyle(color: Colors.grey, fontFamily: 'Poppins-Regular',)),
                     ],
                   ),
                   const Spacer(),
@@ -171,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen>
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: const Text("+ Add Task", style: TextStyle(fontSize: 16, color: Colors.white)),
+                    child: const Text("+ Add Task", style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: 'Poppins-Regular',)),
                   ),
                 ],
               ),
@@ -210,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen>
               Expanded(
                 child: filteredTasks.isEmpty
                     ? const Center(
-                  child: Text('No tasks yet', style: TextStyle(color: Colors.grey)),
+                  child: Text('No tasks yet', style: TextStyle(color: Colors.grey, fontFamily: 'Poppins-Regular',)),
                 ) : ListView.separated(
                   itemCount: filteredTasks.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 16),

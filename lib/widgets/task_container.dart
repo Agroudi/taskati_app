@@ -34,6 +34,7 @@ class TaskCard extends StatelessWidget
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
+              fontFamily: 'Poppins-Regular',
               color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -47,6 +48,7 @@ class TaskCard extends StatelessWidget
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
+                  fontFamily: 'Poppins-Regular',
                   color: Colors.white70,
                   fontSize: 14,
                 ),
@@ -59,7 +61,7 @@ class TaskCard extends StatelessWidget
               const SizedBox(width: 6),
               Text(
                 '$startTime  →  $endTime',
-                style: const TextStyle(color: Colors.white70, fontSize: 13),
+                style: const TextStyle(color: Colors.white70, fontSize: 13, fontFamily: 'Poppins-Regular',),
               ),
             ],
           ),

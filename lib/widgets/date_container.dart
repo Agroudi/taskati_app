@@ -18,6 +18,7 @@ Widget DateItem({
         Text(
           month,
           style: TextStyle(
+            fontFamily: 'Poppins-Regular',
             fontSize: 12,
             color: isSelected ? Colors.white : Colors.grey,
           ),
@@ -26,6 +27,7 @@ Widget DateItem({
         Text(
           day,
           style: TextStyle(
+            fontFamily: 'Poppins-Regular',
             fontSize: 22,
             fontWeight: FontWeight.bold,
             color: isSelected ? Colors.white : Colors.black,
@@ -35,6 +37,7 @@ Widget DateItem({
         Text(
           weekDay,
           style: TextStyle(
+            fontFamily: 'Poppins-Regular',
             fontSize: 12,
             color: isSelected ? Colors.white : Colors.grey,
           ),

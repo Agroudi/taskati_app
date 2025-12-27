@@ -51,7 +51,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Task'),
+        title: const Text('Add Task', style: TextStyle(fontFamily: 'Poppins-Regular', color: Colors.white)),
         backgroundColor: Colors.blue.shade900,
       ),
       body: Padding(
@@ -107,6 +107,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                   },
                   child: Text(
                     selectedDate == null ? 'Select Date' : dateFormat.format(selectedDate!),
+                      style: TextStyle(fontFamily: 'Poppins-Regular')
                   ),
                 ),
               ),
@@ -141,6 +142,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                         startTime!.minute,
                       ),
                     ),
+                      style: TextStyle(fontFamily: 'Poppins-Regular')
                   ),
                 ),
               ),
@@ -174,6 +176,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                         endTime!.minute,
                       ),
                     ),
+                    style: TextStyle(fontFamily: 'Poppins-Regular',)
                   ),
                 ),
               ),
@@ -223,7 +226,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                       'color': getRandomColor(),
                     });
                   },
-                  child: const Text('Create Task'),
+                  child: const Text('Create Task', style: TextStyle(fontFamily: 'Poppins-Regular', color: Colors.white)),
                 ),
               ),
             ],
