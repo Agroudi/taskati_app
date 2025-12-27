@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskati_app/screens/home_screen.dart';
 import 'package:taskati_app/widgets/app_button.dart';
+import 'package:taskati_app/widgets/app_user.dart';
 
 class AuthScreen extends StatefulWidget {
+  const AuthScreen({super.key});
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
@@ -12,22 +15,30 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final ImagePicker picker = ImagePicker();
+  final TextEditingController nameController = TextEditingController();
 
   XFile? photo;
 
   void openCamera() async {
-     photo = await picker.pickImage(source: ImageSource.camera);
-     setState((){});
+    final picked = await picker.pickImage(source: ImageSource.camera);
+    if (picked != null) {
+      setState(() {
+        photo = picked;
+      });
+    }
   }
+
   void openGallery() async {
-    photo = await picker.pickImage(source: ImageSource.gallery);
-    setState((){});
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      setState(() {
+        photo = picked;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(12),
@@ -35,62 +46,87 @@ class _AuthScreenState extends State<AuthScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Visibility(
-                visible: photo == null,
-                replacement: CircleAvatar(radius: 85, backgroundImage: Image.file(File(photo?.path??"")).image),
-                child: CircleAvatar(
+              // AVATAR (SAFE)
+              CircleAvatar(
                 radius: 85,
                 backgroundColor: Colors.black,
-                child: Icon(
-                    Icons.person_rounded,
-                    size: 170,
-                    color: Colors.blue.shade900
-                ),
-                ),
+                backgroundImage:
+                photo != null ? FileImage(File(photo!.path)) : null,
+                child: photo == null
+                    ? Icon(
+                  Icons.person_rounded,
+                  size: 170,
+                  color: Colors.blue.shade900,
+                )
+                    : null,
               ),
-              SizedBox(height: 27),
+
+              const SizedBox(height: 27),
+
               AppButton(
-                onPressed: () async {
-                  openCamera();
-                },
-                  title: 'Upload From Camera'
+                title: 'Upload From Camera',
+                onPressed: openCamera,
               ),
-              SizedBox(height: 12),
+
+              const SizedBox(height: 12),
+
               AppButton(
-                onPressed: () async {
-                  openGallery();
-                },
-                  title: 'Upload From Gallery'
+                title: 'Upload From Gallery',
+                onPressed: openGallery,
               ),
-              SizedBox(height: 25),
-              Divider(
-                thickness: 1.2,
-                endIndent: 20,
-                indent: 20,
-              ),
-              SizedBox(height: 25),
+
+              const SizedBox(height: 25),
+
+              const Divider(thickness: 1.2, endIndent: 20, indent: 20),
+
+              const SizedBox(height: 25),
+
+              // NAME FIELD
               TextFormField(
-                onTapOutside: (value){
+                controller: nameController,
+                onTapOutside: (_) {
                   FocusScope.of(context).unfocus();
                 },
                 decoration: InputDecoration(
                   hintText: 'Enter your name',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      color: Colors.blue.shade900
-                    )
-                  )
+                    borderSide: BorderSide(color: Colors.blue.shade900),
+                  ),
                 ),
               ),
-              SizedBox(height: 30),
-              AppButton(title: 'Confirm',
-                onPressed: (){
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeScreen()), (s) => false);
-                })
+
+              const SizedBox(height: 30),
+
+              AppButton(
+                title: 'Confirm',
+                onPressed: () async
+                {
+                  if (nameController.text.trim().isEmpty) return;
+
+                  AppUser.name = nameController.text.trim();
+
+                  if (photo != null)
+                  {
+                    AppUser.setImagePath(photo!.path);
+                  }
+
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setString('user_name', AppUser.name);
+                  if (photo != null)
+                  {
+                    await prefs.setString('user_photo', AppUser.imagePath!);
+                  }
+
+                  setState(() {});
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()));
+                  },
+              )
             ],
           ),
         ),

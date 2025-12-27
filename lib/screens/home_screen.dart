@@ -1,12 +1,86 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:taskati_app/screens/add_task_screen.dart';
+import 'package:taskati_app/widgets/app_user.dart';
 import 'package:taskati_app/widgets/date_container.dart';
 import 'package:taskati_app/widgets/task_container.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final List<Map<String, dynamic>> tasks = [];
+  DateTime selectedDate = DateTime.now();
+
+  List<Map<String, dynamic>> get filteredTasks => tasks
+      .where((task) =>
+  task['date'].year == selectedDate.year &&
+      task['date'].month == selectedDate.month &&
+      task['date'].day == selectedDate.day)
+      .toList();
+
+  @override
+  void initState() {
+    super.initState();
+    loadTasks();
+  }
+
+  Future<void> loadTasks() async {
+    final box = Hive.box('tasksBox');
+    final savedList = box.get('tasks', defaultValue: []);
+    setState(() {
+      tasks.addAll((savedList as List).map((task) => {
+        'title': task['title'],
+        'subtitle': task['subtitle'],
+        'time': task['time'],
+        'color': Color(task['color']),
+        'date': DateTime.parse(task['date']),
+      }));
+    });
+  }
+
+  Future<void> saveTasks() async {
+    final box = Hive.box('tasksBox');
+    final saveList = tasks
+        .map((task) => {
+      'title': task['title'],
+      'subtitle': task['subtitle'],
+      'time': task['time'],
+      'color': (task['color'] as Color).value,
+      'date': (task['date'] as DateTime).toIso8601String(),
+    })
+        .toList();
+    await box.put('tasks', saveList);
+  }
+
+  void selectDate(DateTime date) {
+    setState(() {
+      selectedDate = date;
+    });
+  }
+
+  Future<void> changeUserName(String newName) async {
+    AppUser.name = newName;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_name', newName);
+    setState(() {});
+  }
+
+  Future<void> changeUserPhoto(String path) async {
+    AppUser.imagePath = path;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_photo', path);
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final today = DateTime.now();
     return SafeArea(
       child: Scaffold(
         body: Padding(
@@ -19,128 +93,194 @@ class HomeScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Hello! Abdelrahman',
+                        'Hello! ${AppUser.name}',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: TextStyle(
-                            color: Colors.blue.shade900,
-                            fontSize: 19,
-                            fontWeight: FontWeight.bold
+                          color: Colors.blue.shade900,
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
                         'Have A Nice Day.',
                         style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
                         ),
-                      )
+                      ),
                     ],
                   ),
-                  Spacer(),
+                  const Spacer(),
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: NetworkImage('https://imgs.search.brave.com/C2W8qVxkSsmb6-1spIYRRoeQJlHrUsODHDkaGhadV7I/rs:fit:0:180:1:0/g:ce/aHR0cHM6Ly9zdGlt/Zy5jYXJkZWtoby5j/b20vaW1hZ2VzL2Nh/cmV4dGVyaW9yaW1h/Z2VzLzYzMHg0MjAv/TGFtYm9yZ2hpbmkv/UmV2dWVsdG8vOTc3/MC8xNzUwMDYxMzIz/ODA0L2Zyb250LWxl/ZnQtc2lkZS00Ny5q/cGc_dHI9dy0yMzA'),
-                  )
+                    backgroundImage: AppUser.image,
+                    child: AppUser.image == null
+                        ? const Icon(Icons.person)
+                        : null,
+                  ),
                 ],
               ),
-              SizedBox(height: 24),
 
-// Date + Today + Add Task
+              const SizedBox(height: 24),
+
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "October 30, 2023",
-                        style: TextStyle(
+                        "${today.day} ${_monthName(today.month)}, ${today.year}",
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
                         ),
                       ),
-                      SizedBox(height: 4),
-                      Text(
+                      const SizedBox(height: 4),
+                      const Text(
                         "Today",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
+                        style: TextStyle(color: Colors.grey),
                       ),
                     ],
                   ),
-                  Spacer(),
+                  const Spacer(),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AddTaskScreen(),
+                        ),
+                      );
+                      if (result != null) {
+                        setState(() {
+                          tasks.add(result);
+                        });
+                        await saveTasks();
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue.shade900,
                       elevation: 0,
-                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 13,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Text(
+                    child: const Text(
                       "+ Add Task",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                         color: Colors.white,
-                        fontFamily: 'Poppins-Regular'
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+
+              const SizedBox(height: 20),
+
               SizedBox(
                 height: 110,
-                child: ListView(
+                child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  children: [
-                    DateItem(
-                      month: "OCT",
-                      day: "30",
-                      weekDay: "MON",
-                      isSelected: true,
-                    ),
-                    SizedBox(width: 12),
-                    DateItem(month: "OCT", day: "31", weekDay: "TUE"),
-                    SizedBox(width: 12),
-                    DateItem(month: "NOV", day: "1", weekDay: "WED"),
-                    SizedBox(width: 12),
-                    DateItem(month: "NOV", day: "2", weekDay: "THU"),
-                  ],
+                  itemCount: 30,
+                  itemBuilder: (context, index) {
+                    final date = DateTime.now().add(Duration(days: index));
+                    final isSelected = date.year == selectedDate.year &&
+                        date.month == selectedDate.month &&
+                        date.day == selectedDate.day;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: GestureDetector(
+                        onTap: () => selectDate(date),
+                        child: DateItem(
+                          month: _monthAbbr(date.month),
+                          day: date.day.toString(),
+                          weekDay: _weekDayAbbr(date.weekday),
+                          isSelected: isSelected,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
-              SizedBox(height: 20),
-              taskCard(
-                color: Colors.blue.shade600,
-                title: "Flutter Task - 1",
-                time: "02:25 AM - 02:40 AM",
-                subtitle: "I will do This Task",
-              ),
-              SizedBox(height: 16),
-              taskCard(
-                color: Colors.redAccent,
-                title: "Flutter Task - 2",
-                time: "4:27 PM - 6:42 PM",
-                subtitle: "I will do This Task",
-              ),
-              SizedBox(height: 16),
-              taskCard(
-                color: Colors.orangeAccent,
-                title: "Flutter Task - 3",
-                time: "7:27 PM - 9:43 PM",
-                subtitle: "I will do This Task",
+
+              const SizedBox(height: 20),
+
+              Expanded(
+                child: filteredTasks.isEmpty
+                    ? const Center(
+                  child: Text(
+                    'No tasks yet',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                )
+                    : ListView.separated(
+                  itemCount: filteredTasks.length,
+                  separatorBuilder: (_, __) =>
+                  const SizedBox(height: 16),
+                  itemBuilder: (context, index) {
+                    final task = filteredTasks[index];
+                    return Dismissible(
+                      key: UniqueKey(),
+                      background: Container(
+                        padding: const EdgeInsets.only(left: 16),
+                        alignment: Alignment.centerLeft,
+                        color: Colors.red,
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                      ),
+                      direction: DismissDirection.startToEnd,
+                      onDismissed: (_) async {
+                        setState(() {
+                          tasks.remove(task);
+                        });
+                        await saveTasks();
+                      },
+                      child: TaskCard(
+                        color: task['color'] as Color,
+                        title: task['title'] as String,
+                        time: task['time'] as String,
+                        subtitle: task['subtitle'] as String,
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  String _monthAbbr(int month) {
+    const months = [
+      'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
+      'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'
+    ];
+    return months[month - 1];
+  }
+
+  String _monthName(int month) {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return months[month - 1];
+  }
+
+  String _weekDayAbbr(int weekday) {
+    const days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+    return days[weekday - 1];
   }
 }

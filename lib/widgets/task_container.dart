@@ -1,80 +1,74 @@
 import 'package:flutter/material.dart';
 
-Widget taskCard({
-  required Color color,
-  required String title,
-  required String time,
-  required String subtitle,
-}) {
-  return Container(
-    height: 120,
-    padding: EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: color,
-      borderRadius: BorderRadius.circular(18),
-    ),
-    child: Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+class TaskCard extends StatelessWidget {
+  final Color color;
+  final String title;
+  final String subtitle;
+  final String time;
+
+  const TaskCard({
+    super.key,
+    required this.color,
+    required this.title,
+    required this.subtitle,
+    required this.time,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 6),
+
+          Text(
+            subtitle,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 14,
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          Row(
             children: [
-              Text(
-                title,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+              const Icon(
+                Icons.access_time,
+                color: Colors.white70,
+                size: 16,
               ),
-              SizedBox(height: 8),
-              Row(
-                children: [
-                  Icon(
-                    Icons.access_time,
-                    color: Colors.white70,
-                    size: 16,
-                  ),
-                  SizedBox(width: 6),
-                  Text(
-                    time,
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-              Spacer(),
+              const SizedBox(width: 6),
               Text(
-                subtitle,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
+                time,
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 13,
                 ),
               ),
             ],
           ),
-        ),
-        Container(
-          width: 1,
-          height: double.infinity,
-          color: Colors.white30,
-          margin: EdgeInsets.symmetric(horizontal: 12),
-        ),
-        RotatedBox(
-          quarterTurns: 3,
-          child: Text(
-            "TODO",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.2,
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
