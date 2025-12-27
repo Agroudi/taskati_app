@@ -13,7 +13,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+{
   final List<Map<String, dynamic>> tasks = [];
   DateTime selectedDate = DateTime.now();
 
@@ -25,16 +26,20 @@ class _HomeScreenState extends State<HomeScreen> {
       .toList();
 
   @override
-  void initState() {
+  void initState()
+  {
     super.initState();
     loadTasks();
   }
 
-  Future<void> loadTasks() async {
+  Future<void> loadTasks() async
+  {
     final box = Hive.box('tasksBox');
     final savedList = box.get('tasks', defaultValue: []);
-    setState(() {
-      tasks.addAll((savedList as List).map((task) => {
+    setState(()
+    {
+      tasks.addAll((savedList as List).map((task) =>
+      {
         'title': task['title'],
         'subtitle': task['subtitle'],
         'startTime': task['startTime'], // now separate
@@ -45,7 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> saveTasks() async {
+  Future<void> saveTasks() async
+  {
     final box = Hive.box('tasksBox');
     final saveList = tasks
         .map((task) => {
@@ -60,20 +66,24 @@ class _HomeScreenState extends State<HomeScreen> {
     await box.put('tasks', saveList);
   }
 
-  void selectDate(DateTime date) {
-    setState(() {
+  void selectDate(DateTime date)
+  {
+    setState(()
+    {
       selectedDate = date;
     });
   }
 
-  Future<void> changeUserName(String newName) async {
+  Future<void> changeUserName(String newName) async
+  {
     AppUser.name = newName;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('user_name', newName);
     setState(() {});
   }
 
-  Future<void> changeUserPhoto(String path) async {
+  Future<void> changeUserPhoto(String path) async
+  {
     AppUser.imagePath = path;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('user_photo', path);
@@ -81,7 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     final today = DateTime.now();
     return SafeArea(
       child: Scaffold(
@@ -140,13 +151,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const Spacer(),
                   ElevatedButton(
-                    onPressed: () async {
-                      final result = await Navigator.push(
-                        context,
+                    onPressed: () async
+                    {
+                      final result = await Navigator.push(context,
                         MaterialPageRoute(builder: (_) => const AddTaskScreen()),
                       );
-                      if (result != null) {
-                        setState(() {
+                      if (result != null)
+                      {
+                        setState(()
+                        {
                           tasks.add(result);
                         });
                         await saveTasks();
@@ -198,8 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: filteredTasks.isEmpty
                     ? const Center(
                   child: Text('No tasks yet', style: TextStyle(color: Colors.grey)),
-                )
-                    : ListView.separated(
+                ) : ListView.separated(
                   itemCount: filteredTasks.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 16),
                   itemBuilder: (context, index) {
@@ -216,8 +228,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         child: const Icon(Icons.delete, color: Colors.white),
                       ),
-                      onDismissed: (_) async {
-                        setState(() {
+                      onDismissed: (_) async
+                      {
+                        setState(()
+                        {
                           tasks.remove(task);
                         });
                         await saveTasks();
@@ -240,12 +254,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  String _monthAbbr(int month) {
+  String _monthAbbr(int month)
+  {
     const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
     return months[month - 1];
   }
 
-  String _monthName(int month) {
+  String _monthName(int month)
+  {
     const months = [
       'January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'
@@ -253,7 +269,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return months[month - 1];
   }
 
-  String _weekDayAbbr(int weekday) {
+  String _weekDayAbbr(int weekday)
+  {
     const days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
     return days[weekday - 1];
   }

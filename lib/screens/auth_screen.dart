@@ -13,119 +13,96 @@ class AuthScreen extends StatefulWidget {
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends State<AuthScreen>
+{
   final ImagePicker picker = ImagePicker();
   final TextEditingController nameController = TextEditingController();
-
   XFile? photo;
 
-  void openCamera() async {
-    final picked = await picker.pickImage(source: ImageSource.camera);
-    if (picked != null) {
-      setState(() {
-        photo = picked;
-      });
-    }
+  @override
+  void initState() {
+    super.initState();
+    nameController.text = AppUser.name;
   }
 
-  void openGallery() async {
+  void openCamera() async
+  {
+    final picked = await picker.pickImage(source: ImageSource.camera);
+    if (picked != null) setState(() => photo = picked);
+  }
+
+  void openGallery() async
+  {
     final picked = await picker.pickImage(source: ImageSource.gallery);
-    if (picked != null) {
-      setState(() {
-        photo = picked;
-      });
-    }
+    if (picked != null) setState(() => photo = picked);
+  }
+
+  void confirm() async
+  {
+    if (nameController.text.trim().isEmpty) return;
+
+    AppUser.name = nameController.text.trim();
+
+    if (photo != null) AppUser.setImagePath(photo!.path);
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user_name', AppUser.name);
+    if (photo != null) await prefs.setString('user_photo', AppUser.imagePath!);
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const HomeScreen()),
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 85,
-                backgroundColor: Colors.black,
-                backgroundImage:
-                photo != null ? FileImage(File(photo!.path)) : null,
-                child: photo == null
-                    ? Icon(
-                  Icons.person_rounded,
-                  size: 170,
-                  color: Colors.blue.shade900,
-                )
-                    : null,
-              ),
-
-              const SizedBox(height: 27),
-
-              AppButton(
-                title: 'Upload From Camera',
-                onPressed: openCamera,
-              ),
-
-              const SizedBox(height: 12),
-
-              AppButton(
-                title: 'Upload From Gallery',
-                onPressed: openGallery,
-              ),
-
-              const SizedBox(height: 25),
-
-              const Divider(thickness: 1.2, endIndent: 20, indent: 20),
-
-              const SizedBox(height: 25),
-
-              TextFormField(
-                controller: nameController,
-                onTapOutside: (_) {
-                  FocusScope.of(context).unfocus();
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your name',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue.shade900),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 85,
+                  backgroundColor: Colors.black,
+                  backgroundImage: photo != null
+                      ? FileImage(File(photo!.path))
+                      : (AppUser.imagePath != null
+                      ? FileImage(File(AppUser.imagePath!))
+                      : null),
+                  child: (photo == null && AppUser.imagePath == null)
+                      ? Icon(Icons.person_rounded, size: 170, color: Colors.blue.shade900)
+                      : null,
+                ),
+                const SizedBox(height: 27),
+                AppButton(title: 'Upload From Camera', onPressed: openCamera),
+                const SizedBox(height: 12),
+                AppButton(title: 'Upload From Gallery', onPressed: openGallery),
+                const SizedBox(height: 25),
+                const Divider(thickness: 1.2, endIndent: 20, indent: 20),
+                const SizedBox(height: 25),
+                TextFormField(
+                  controller: nameController,
+                  onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                  decoration: InputDecoration(
+                    hintText: 'Enter your name',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.blue.shade900),
+                    ),
                   ),
                 ),
-              ),
-
-              const SizedBox(height: 30),
-
-              AppButton(
-                title: 'Confirm',
-                onPressed: () async
-                {
-                  if (nameController.text.trim().isEmpty) return;
-
-                  AppUser.name = nameController.text.trim();
-
-                  if (photo != null)
-                  {
-                    AppUser.setImagePath(photo!.path);
-                  }
-
-                  final prefs = await SharedPreferences.getInstance();
-                  await prefs.setString('user_name', AppUser.name);
-                  if (photo != null)
-                  {
-                    await prefs.setString('user_photo', AppUser.imagePath!);
-                  }
-
-                  setState(() {});
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()));
-                  },
-              )
-            ],
+                const SizedBox(height: 30),
+                AppButton(title: 'Confirm', onPressed: confirm),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
-class TaskModel {
+class TaskModel
+{
   final String title;
   final String description;
   final DateTime dateTime;

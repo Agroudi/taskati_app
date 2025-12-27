@@ -9,7 +9,8 @@ class AddTaskScreen extends StatefulWidget {
   State<AddTaskScreen> createState() => _AddTaskScreenState();
 }
 
-class _AddTaskScreenState extends State<AddTaskScreen> {
+class _AddTaskScreenState extends State<AddTaskScreen>
+{
   final _formKey = GlobalKey<FormState>();
   AutovalidateMode _autoValidate = AutovalidateMode.disabled;
 
@@ -20,7 +21,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   TimeOfDay? startTime;
   TimeOfDay? endTime;
 
-  Color getRandomColor() {
+  Color getRandomColor()
+  {
     final colors = [
       Colors.blue.shade600,
       Colors.redAccent,
@@ -32,7 +34,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     return colors[Random().nextInt(colors.length)];
   }
 
-  bool isEndAfterStart() {
+  bool isEndAfterStart()
+  {
     if (startTime == null || endTime == null) return true;
 
     final start = startTime!.hour * 60 + startTime!.minute;
@@ -41,7 +44,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     final dateFormat = DateFormat('MMM d, yyyy');
     final timeFormat = DateFormat('hh:mm a');
 
@@ -63,10 +67,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   labelText: 'Title',
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) =>
-                v == null || v.trim().isEmpty
-                    ? 'Title can’t be empty'
-                    : null,
+                validator: (v) => v == null || v.trim().isEmpty ? 'Title can’t be empty' : null,
               ),
 
               const SizedBox(height: 12),
@@ -78,10 +79,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   labelText: 'Description',
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) =>
-                v == null || v.trim().isEmpty
-                    ? 'Description can’t be empty'
-                    : null,
+                validator: (v) => v == null || v.trim().isEmpty ? 'Description can’t be empty' : null,
               ),
 
               const SizedBox(height: 12),
@@ -91,26 +89,24 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   labelText: 'Date',
                   border: const OutlineInputBorder(),
                   errorText: _autoValidate == AutovalidateMode.always &&
-                      selectedDate == null
-                      ? 'Date can’t be empty'
-                      : null,
+                      selectedDate == null ? 'Date can’t be empty' : null,
                 ),
                 child: InkWell(
-                  onTap: () async {
+                  onTap: () async
+                  {
                     final date = await showDatePicker(
                       context: context,
                       initialDate: DateTime.now(),
                       firstDate: DateTime.now(),
                       lastDate: DateTime(2100),
                     );
-                    if (date != null) {
+                    if (date != null)
+                    {
                       setState(() => selectedDate = date);
                     }
                   },
                   child: Text(
-                    selectedDate == null
-                        ? 'Select Date'
-                        : dateFormat.format(selectedDate!),
+                    selectedDate == null ? 'Select Date' : dateFormat.format(selectedDate!),
                   ),
                 ),
               ),
@@ -122,17 +118,17 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   labelText: 'Start Time',
                   border: const OutlineInputBorder(),
                   errorText: _autoValidate == AutovalidateMode.always &&
-                      startTime == null
-                      ? 'Start time required'
-                      : null,
+                      startTime == null ? 'Start time required' : null,
                 ),
                 child: InkWell(
-                  onTap: () async {
+                  onTap: () async
+                  {
                     final time = await showTimePicker(
                       context: context,
                       initialTime: TimeOfDay.now(),
                     );
-                    if (time != null) {
+                    if (time != null)
+                    {
                       setState(() => startTime = time);
                     }
                   },
@@ -140,10 +136,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     startTime == null
                         ? 'Select Start Time'
                         : timeFormat.format(
-                      DateTime(
-                        0,
-                        0,
-                        0,
+                      DateTime(0, 0, 0,
                         startTime!.hour,
                         startTime!.minute,
                       ),
@@ -159,31 +152,24 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   labelText: 'End Time',
                   border: const OutlineInputBorder(),
                   errorText: _autoValidate == AutovalidateMode.always
-                      ? endTime == null
-                      ? 'End time required'
-                      : !isEndAfterStart()
-                      ? 'End time must be after start'
-                      : null
-                      : null,
+                      ? endTime == null ? 'End time required'
+                      : !isEndAfterStart() ? 'End time must be after start' : null : null,
                 ),
                 child: InkWell(
-                  onTap: () async {
+                  onTap: () async
+                  {
                     final time = await showTimePicker(
                       context: context,
                       initialTime: TimeOfDay.now(),
                     );
-                    if (time != null) {
+                    if (time != null)
+                    {
                       setState(() => endTime = time);
                     }
                   },
                   child: Text(
-                    endTime == null
-                        ? 'Select End Time'
-                        : timeFormat.format(
-                      DateTime(
-                        0,
-                        0,
-                        0,
+                    endTime == null ? 'Select End Time' : timeFormat.format(
+                      DateTime(0, 0, 0,
                         endTime!.hour,
                         endTime!.minute,
                       ),
@@ -204,37 +190,32 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () {
-                    setState(() {
+                  onPressed: ()
+                  {
+                    setState(()
+                    {
                       _autoValidate = AutovalidateMode.always;
                     });
 
                     if (!_formKey.currentState!.validate()) return;
-                    if (selectedDate == null ||
-                        startTime == null ||
-                        endTime == null ||
-                        !isEndAfterStart()) {
+                    if (selectedDate == null || startTime == null || endTime == null || !isEndAfterStart())
+                    {
                       return;
                     }
 
-                    Navigator.pop(context, {
+                    Navigator.pop(context,
+                        {
                       'title': titleController.text.trim(),
                       'subtitle': descController.text.trim(),
                       'date': selectedDate,
                       'startTime': timeFormat.format(
-                        DateTime(
-                          0,
-                          0,
-                          0,
+                        DateTime(0, 0, 0,
                           startTime!.hour,
                           startTime!.minute,
                         ),
                       ),
                       'endTime': timeFormat.format(
-                        DateTime(
-                          0,
-                          0,
-                          0,
+                        DateTime(0, 0, 0,
                           endTime!.hour,
                           endTime!.minute,
                         ),

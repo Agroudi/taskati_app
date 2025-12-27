@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TaskCard extends StatelessWidget {
+class TaskCard extends StatelessWidget
+{
   final Color color;
   final String title;
   final String subtitle;
@@ -17,7 +18,8 @@ class TaskCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)
+  {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(

@@ -1,7 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-Color getRandomTaskColor() {
+Color getRandomTaskColor()
+{
   final colors = [
     Colors.blue.shade500,
     Colors.redAccent,
