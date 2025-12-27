@@ -46,7 +46,6 @@ class _AuthScreenState extends State<AuthScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // AVATAR (SAFE)
               CircleAvatar(
                 radius: 85,
                 backgroundColor: Colors.black,
@@ -81,7 +80,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
               const SizedBox(height: 25),
 
-              // NAME FIELD
               TextFormField(
                 controller: nameController,
                 onTapOutside: (_) {

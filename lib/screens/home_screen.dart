@@ -37,7 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
       tasks.addAll((savedList as List).map((task) => {
         'title': task['title'],
         'subtitle': task['subtitle'],
-        'time': task['time'],
+        'startTime': task['startTime'], // now separate
+        'endTime': task['endTime'],     // now separate
         'color': Color(task['color']),
         'date': DateTime.parse(task['date']),
       }));
@@ -50,7 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
         .map((task) => {
       'title': task['title'],
       'subtitle': task['subtitle'],
-      'time': task['time'],
+      'startTime': task['startTime'],
+      'endTime': task['endTime'],
       'color': (task['color'] as Color).value,
       'date': (task['date'] as DateTime).toIso8601String(),
     })
@@ -102,13 +104,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(
+                      const SizedBox(height: 4),
+                      const Text(
                         'Have A Nice Day.',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: TextStyle(color: Colors.grey, fontSize: 16),
                       ),
                     ],
                   ),
@@ -116,9 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   CircleAvatar(
                     radius: 30,
                     backgroundImage: AppUser.image,
-                    child: AppUser.image == null
-                        ? const Icon(Icons.person)
-                        : null,
+                    child: AppUser.image == null ? const Icon(Icons.person) : null,
                   ),
                 ],
               ),
@@ -138,10 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      const Text(
-                        "Today",
-                        style: TextStyle(color: Colors.grey),
-                      ),
+                      const Text("Today", style: TextStyle(color: Colors.grey)),
                     ],
                   ),
                   const Spacer(),
@@ -149,9 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () async {
                       final result = await Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => const AddTaskScreen(),
-                        ),
+                        MaterialPageRoute(builder: (_) => const AddTaskScreen()),
                       );
                       if (result != null) {
                         setState(() {
@@ -163,22 +155,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue.shade900,
                       elevation: 0,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 13,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: const Text(
-                      "+ Add Task",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
-                      ),
-                    ),
+                    child: const Text("+ Add Task", style: TextStyle(fontSize: 16, color: Colors.white)),
                   ),
                 ],
               ),
@@ -217,29 +197,25 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: filteredTasks.isEmpty
                     ? const Center(
-                  child: Text(
-                    'No tasks yet',
-                    style: TextStyle(color: Colors.grey),
-                  ),
+                  child: Text('No tasks yet', style: TextStyle(color: Colors.grey)),
                 )
                     : ListView.separated(
                   itemCount: filteredTasks.length,
-                  separatorBuilder: (_, __) =>
-                  const SizedBox(height: 16),
+                  separatorBuilder: (_, __) => const SizedBox(height: 16),
                   itemBuilder: (context, index) {
                     final task = filteredTasks[index];
                     return Dismissible(
-                      key: UniqueKey(),
+                      key: ValueKey(task),
+                      direction: DismissDirection.startToEnd,
                       background: Container(
                         padding: const EdgeInsets.only(left: 16),
                         alignment: Alignment.centerLeft,
-                        color: Colors.red,
-                        child: const Icon(
-                          Icons.delete,
-                          color: Colors.white,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(18),
                         ),
+                        child: const Icon(Icons.delete, color: Colors.white),
                       ),
-                      direction: DismissDirection.startToEnd,
                       onDismissed: (_) async {
                         setState(() {
                           tasks.remove(task);
@@ -249,8 +225,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: TaskCard(
                         color: task['color'] as Color,
                         title: task['title'] as String,
-                        time: task['time'] as String,
                         subtitle: task['subtitle'] as String,
+                        startTime: task['startTime'] as String,
+                        endTime: task['endTime'] as String,
                       ),
                     );
                   },
@@ -264,10 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   String _monthAbbr(int month) {
-    const months = [
-      'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
-      'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'
-    ];
+    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
     return months[month - 1];
   }
 

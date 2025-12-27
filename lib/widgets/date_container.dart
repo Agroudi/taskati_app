@@ -8,7 +8,7 @@ Widget DateItem({
 }) {
   return Container(
     width: 90,
-    padding: EdgeInsets.symmetric(vertical: 12),
+    padding: const EdgeInsets.symmetric(vertical: 12),
     decoration: BoxDecoration(
       color: isSelected ? Colors.blue.shade900 : Colors.transparent,
       borderRadius: BorderRadius.circular(14),
@@ -22,7 +22,7 @@ Widget DateItem({
             color: isSelected ? Colors.white : Colors.grey,
           ),
         ),
-        SizedBox(height: 6),
+        const SizedBox(height: 6),
         Text(
           day,
           style: TextStyle(
@@ -31,7 +31,7 @@ Widget DateItem({
             color: isSelected ? Colors.white : Colors.black,
           ),
         ),
-        SizedBox(height: 6),
+        const SizedBox(height: 6),
         Text(
           weekDay,
           style: TextStyle(

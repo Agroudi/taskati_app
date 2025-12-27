@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AddTaskScreen extends StatefulWidget {
   const AddTaskScreen({super.key});
@@ -9,10 +10,15 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController descController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
 
-  DateTime selectedDateTime = DateTime.now();
+  final titleController = TextEditingController();
+  final descController = TextEditingController();
+
+  DateTime? selectedDate;
+  TimeOfDay? startTime;
+  TimeOfDay? endTime;
 
   Color getRandomColor() {
     final colors = [
@@ -26,36 +32,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     return colors[Random().nextInt(colors.length)];
   }
 
-  Future<void> pickDateTime() async {
-    final date = await showDatePicker(
-      context: context,
-      initialDate: selectedDateTime,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2100),
-    );
+  bool isEndAfterStart() {
+    if (startTime == null || endTime == null) return true;
 
-    if (date == null) return;
-
-    final time = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(selectedDateTime),
-    );
-
-    if (time == null) return;
-
-    setState(() {
-      selectedDateTime = DateTime(
-        date.year,
-        date.month,
-        date.day,
-        time.hour,
-        time.minute,
-      );
-    });
+    final start = startTime!.hour * 60 + startTime!.minute;
+    final end = endTime!.hour * 60 + endTime!.minute;
+    return end > start;
   }
 
   @override
   Widget build(BuildContext context) {
+    final dateFormat = DateFormat('MMM d, yyyy');
+    final timeFormat = DateFormat('hh:mm a');
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Task'),
@@ -63,78 +52,201 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Task title
-            TextFormField(
-              controller: titleController,
-              decoration: const InputDecoration(
-                labelText: 'Task Title',
-                border: OutlineInputBorder(),
+        child: Form(
+          key: _formKey,
+          autovalidateMode: _autoValidate,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: titleController,
+                decoration: const InputDecoration(
+                  labelText: 'Title',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (v) =>
+                v == null || v.trim().isEmpty
+                    ? 'Title can’t be empty'
+                    : null,
               ),
-            ),
-            const SizedBox(height: 12),
 
-            // Task description
-            TextFormField(
-              controller: descController,
-              maxLines: 2,
-              decoration: const InputDecoration(
-                labelText: 'Task Description',
-                border: OutlineInputBorder(),
+              const SizedBox(height: 12),
+
+              TextFormField(
+                controller: descController,
+                maxLines: 2,
+                decoration: const InputDecoration(
+                  labelText: 'Description',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (v) =>
+                v == null || v.trim().isEmpty
+                    ? 'Description can’t be empty'
+                    : null,
               ),
-            ),
-            const SizedBox(height: 12),
 
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: pickDateTime,
+              const SizedBox(height: 12),
+
+              InputDecorator(
+                decoration: InputDecoration(
+                  labelText: 'Date',
+                  border: const OutlineInputBorder(),
+                  errorText: _autoValidate == AutovalidateMode.always &&
+                      selectedDate == null
+                      ? 'Date can’t be empty'
+                      : null,
+                ),
+                child: InkWell(
+                  onTap: () async {
+                    final date = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2100),
+                    );
+                    if (date != null) {
+                      setState(() => selectedDate = date);
+                    }
+                  },
+                  child: Text(
+                    selectedDate == null
+                        ? 'Select Date'
+                        : dateFormat.format(selectedDate!),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              InputDecorator(
+                decoration: InputDecoration(
+                  labelText: 'Start Time',
+                  border: const OutlineInputBorder(),
+                  errorText: _autoValidate == AutovalidateMode.always &&
+                      startTime == null
+                      ? 'Start time required'
+                      : null,
+                ),
+                child: InkWell(
+                  onTap: () async {
+                    final time = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                    );
+                    if (time != null) {
+                      setState(() => startTime = time);
+                    }
+                  },
+                  child: Text(
+                    startTime == null
+                        ? 'Select Start Time'
+                        : timeFormat.format(
+                      DateTime(
+                        0,
+                        0,
+                        0,
+                        startTime!.hour,
+                        startTime!.minute,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              InputDecorator(
+                decoration: InputDecoration(
+                  labelText: 'End Time',
+                  border: const OutlineInputBorder(),
+                  errorText: _autoValidate == AutovalidateMode.always
+                      ? endTime == null
+                      ? 'End time required'
+                      : !isEndAfterStart()
+                      ? 'End time must be after start'
+                      : null
+                      : null,
+                ),
+                child: InkWell(
+                  onTap: () async {
+                    final time = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                    );
+                    if (time != null) {
+                      setState(() => endTime = time);
+                    }
+                  },
+                  child: Text(
+                    endTime == null
+                        ? 'Select End Time'
+                        : timeFormat.format(
+                      DateTime(
+                        0,
+                        0,
+                        0,
+                        endTime!.hour,
+                        endTime!.minute,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              const Spacer(),
+
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue.shade900,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  child: const Text('Pick Date & Time'),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  "${selectedDateTime.day}/${selectedDateTime.month}/${selectedDateTime.year} "
-                      "${selectedDateTime.hour.toString().padLeft(2, '0')}:${selectedDateTime.minute.toString().padLeft(2, '0')}",
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
+                  onPressed: () {
+                    setState(() {
+                      _autoValidate = AutovalidateMode.always;
+                    });
 
-            const Spacer(),
+                    if (!_formKey.currentState!.validate()) return;
+                    if (selectedDate == null ||
+                        startTime == null ||
+                        endTime == null ||
+                        !isEndAfterStart()) {
+                      return;
+                    }
 
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  if (titleController.text.trim().isEmpty) return;
-
-                  Navigator.pop(context, {
-                    'title': titleController.text.trim(),
-                    'subtitle': descController.text.trim(),
-                    'time':
-                    '${selectedDateTime.hour.toString().padLeft(2, '0')}:${selectedDateTime.minute.toString().padLeft(2, '0')}',
-                    'color': getRandomColor(),
-                    'date': selectedDateTime, // key for filtering
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade900,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Add Task',
-                  style: TextStyle(fontSize: 16),
+                    Navigator.pop(context, {
+                      'title': titleController.text.trim(),
+                      'subtitle': descController.text.trim(),
+                      'date': selectedDate,
+                      'startTime': timeFormat.format(
+                        DateTime(
+                          0,
+                          0,
+                          0,
+                          startTime!.hour,
+                          startTime!.minute,
+                        ),
+                      ),
+                      'endTime': timeFormat.format(
+                        DateTime(
+                          0,
+                          0,
+                          0,
+                          endTime!.hour,
+                          endTime!.minute,
+                        ),
+                      ),
+                      'color': getRandomColor(),
+                    });
+                  },
+                  child: const Text('Create Task'),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
