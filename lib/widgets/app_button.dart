@@ -18,7 +18,7 @@ class AppButton extends StatelessWidget
               fontFamily: 'Poppins-Regular',
               color: Colors.white,
               fontSize: 17
-          ),
+          )
         ),
         style: ElevatedButton.styleFrom(
             backgroundColor: Colors.blue.shade900,

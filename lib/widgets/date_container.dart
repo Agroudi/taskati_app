@@ -5,13 +5,14 @@ Widget DateItem({
   required String day,
   required String weekDay,
   bool isSelected = false,
-}) {
+})
+{
   return Container(
     width: 90,
     padding: const EdgeInsets.symmetric(vertical: 12),
     decoration: BoxDecoration(
       color: isSelected ? Colors.blue.shade900 : Colors.transparent,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(14)
     ),
     child: Column(
       children: [
@@ -20,8 +21,8 @@ Widget DateItem({
           style: TextStyle(
             fontFamily: 'Poppins-Regular',
             fontSize: 12,
-            color: isSelected ? Colors.white : Colors.grey,
-          ),
+            color: isSelected ? Colors.white : Colors.grey
+          )
         ),
         const SizedBox(height: 6),
         Text(
@@ -30,8 +31,8 @@ Widget DateItem({
             fontFamily: 'Poppins-Regular',
             fontSize: 22,
             fontWeight: FontWeight.bold,
-            color: isSelected ? Colors.white : Colors.black,
-          ),
+            color: isSelected ? Colors.white : Colors.black
+          )
         ),
         const SizedBox(height: 6),
         Text(
@@ -39,10 +40,10 @@ Widget DateItem({
           style: TextStyle(
             fontFamily: 'Poppins-Regular',
             fontSize: 12,
-            color: isSelected ? Colors.white : Colors.grey,
-          ),
-        ),
-      ],
-    ),
+            color: isSelected ? Colors.white : Colors.grey
+          )
+        )
+      ]
+    )
   );
 }

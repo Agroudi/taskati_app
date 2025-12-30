@@ -24,7 +24,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   void _navigate() async
   {
-    await Future.delayed(const Duration(seconds: 3)); // splash duration
+    // splash duration
+    await Future.delayed(const Duration(seconds: 3));
 
     final prefs = await SharedPreferences.getInstance();
 
@@ -44,12 +45,12 @@ class _SplashScreenState extends State<SplashScreen>
     {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const AuthScreen()),
+        MaterialPageRoute(builder: (_) => const AuthScreen())
       );
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const HomeScreen())
       );
     }
   }
@@ -65,15 +66,15 @@ class _SplashScreenState extends State<SplashScreen>
           const SizedBox(height: 20),
           const Text(
             'Taskati',
-            style: TextStyle(fontSize: 36, fontFamily: 'Poppins-Regular'),
+            style: TextStyle(fontSize: 36, fontFamily: 'Poppins-Regular')
           ),
           const SizedBox(height: 30),
           const Text(
             "It's Time To Get Organized",
-            style: TextStyle(color: Colors.grey, fontSize: 20),
-          ),
-        ],
-      ),
+            style: TextStyle(color: Colors.grey, fontSize: 20)
+          )
+        ]
+      )
     );
   }
 }

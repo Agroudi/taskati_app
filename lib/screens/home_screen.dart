@@ -22,8 +22,7 @@ class _HomeScreenState extends State<HomeScreen>
       .where((task) =>
   task['date'].year == selectedDate.year &&
       task['date'].month == selectedDate.month &&
-      task['date'].day == selectedDate.day)
-      .toList();
+      task['date'].day == selectedDate.day).toList();
 
   @override
   void initState()
@@ -42,8 +41,8 @@ class _HomeScreenState extends State<HomeScreen>
       {
         'title': task['title'],
         'subtitle': task['subtitle'],
-        'startTime': task['startTime'], // now separate
-        'endTime': task['endTime'],     // now separate
+        'startTime': task['startTime'],
+        'endTime': task['endTime'],
         'color': Color(task['color']),
         'date': DateTime.parse(task['date']),
       }));
@@ -61,8 +60,7 @@ class _HomeScreenState extends State<HomeScreen>
       'endTime': task['endTime'],
       'color': (task['color'] as Color).value,
       'date': (task['date'] as DateTime).toIso8601String(),
-    })
-        .toList();
+    }).toList();
     await box.put('tasks', saveList);
   }
 
@@ -113,23 +111,23 @@ class _HomeScreenState extends State<HomeScreen>
                           fontFamily: 'Poppins-Regular',
                           color: Colors.blue.shade900,
                           fontSize: 19,
-                          fontWeight: FontWeight.bold,
-                        ),
+                          fontWeight: FontWeight.bold
+                        )
                       ),
                       const SizedBox(height: 4),
                       const Text(
                         'Have A Nice Day.',
-                        style: TextStyle(color: Colors.grey, fontSize: 16, fontFamily: 'Poppins-Regular',),
-                      ),
-                    ],
+                        style: TextStyle(color: Colors.grey, fontSize: 16, fontFamily: 'Poppins-Regular')
+                      )
+                    ]
                   ),
                   const Spacer(),
                   CircleAvatar(
                     radius: 30,
                     backgroundImage: AppUser.image,
-                    child: AppUser.image == null ? const Icon(Icons.person) : null,
-                  ),
-                ],
+                    child: AppUser.image == null ? const Icon(Icons.person) : null
+                  )
+                ]
               ),
 
               const SizedBox(height: 24),
@@ -145,10 +143,10 @@ class _HomeScreenState extends State<HomeScreen>
                           fontFamily: 'Poppins-Regular',
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                        ),
+                        )
                       ),
                       const SizedBox(height: 4),
-                      const Text("Today", style: TextStyle(color: Colors.grey, fontFamily: 'Poppins-Regular',)),
+                      const Text("Today", style: TextStyle(color: Colors.grey, fontFamily: 'Poppins-Regular'))
                     ],
                   ),
                   const Spacer(),
@@ -156,8 +154,7 @@ class _HomeScreenState extends State<HomeScreen>
                     onPressed: () async
                     {
                       final result = await Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => const AddTaskScreen()),
-                      );
+                        MaterialPageRoute(builder: (_) => const AddTaskScreen()));
                       if (result != null)
                       {
                         setState(()
@@ -171,11 +168,11 @@ class _HomeScreenState extends State<HomeScreen>
                       backgroundColor: Colors.blue.shade900,
                       elevation: 0,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
                     ),
-                    child: const Text("+ Add Task", style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: 'Poppins-Regular',)),
-                  ),
-                ],
+                    child: const Text("+ Add Task", style: TextStyle(fontSize: 16, color: Colors.white, fontFamily: 'Poppins-Regular'))
+                  )
+                ]
               ),
 
               const SizedBox(height: 20),
@@ -185,12 +182,10 @@ class _HomeScreenState extends State<HomeScreen>
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: 30,
-                  itemBuilder: (context, index) {
+                  itemBuilder: (context, index)
+                  {
                     final date = DateTime.now().add(Duration(days: index));
-                    final isSelected = date.year == selectedDate.year &&
-                        date.month == selectedDate.month &&
-                        date.day == selectedDate.day;
-
+                    final isSelected = date.year == selectedDate.year && date.month == selectedDate.month && date.day == selectedDate.day;
                     return Padding(
                       padding: const EdgeInsets.only(right: 12),
                       child: GestureDetector(
@@ -199,24 +194,24 @@ class _HomeScreenState extends State<HomeScreen>
                           month: _monthAbbr(date.month),
                           day: date.day.toString(),
                           weekDay: _weekDayAbbr(date.weekday),
-                          isSelected: isSelected,
-                        ),
-                      ),
+                          isSelected: isSelected
+                        )
+                      )
                     );
-                  },
-                ),
+                  }
+                )
               ),
 
               const SizedBox(height: 20),
 
               Expanded(
-                child: filteredTasks.isEmpty
-                    ? const Center(
-                  child: Text('No tasks yet', style: TextStyle(color: Colors.grey, fontFamily: 'Poppins-Regular',)),
-                ) : ListView.separated(
+                child: filteredTasks.isEmpty ? const Center(
+                  child: Text('No tasks yet', style: TextStyle(color: Colors.grey, fontFamily: 'Poppins-Regular')))
+                    : ListView.separated(
                   itemCount: filteredTasks.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 16),
-                  itemBuilder: (context, index) {
+                  itemBuilder: (context, index)
+                  {
                     final task = filteredTasks[index];
                     return Dismissible(
                       key: ValueKey(task),
@@ -226,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen>
                         alignment: Alignment.centerLeft,
                         decoration: BoxDecoration(
                           color: Colors.red,
-                          borderRadius: BorderRadius.circular(18),
+                          borderRadius: BorderRadius.circular(18)
                         ),
                         child: const Icon(Icons.delete, color: Colors.white),
                       ),
@@ -243,16 +238,16 @@ class _HomeScreenState extends State<HomeScreen>
                         title: task['title'] as String,
                         subtitle: task['subtitle'] as String,
                         startTime: task['startTime'] as String,
-                        endTime: task['endTime'] as String,
-                      ),
+                        endTime: task['endTime'] as String
+                      )
                     );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+                  }
+                )
+              )
+            ]
+          )
+        )
+      )
     );
   }
 

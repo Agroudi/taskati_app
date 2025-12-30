@@ -9,7 +9,7 @@ Color getRandomTaskColor()
     Colors.orangeAccent,
     Colors.purpleAccent,
     Colors.teal,
-    Colors.indigo,
+    Colors.indigo
   ];
 
   return colors[Random().nextInt(colors.length)];

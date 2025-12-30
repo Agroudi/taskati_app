@@ -52,7 +52,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Task', style: TextStyle(fontFamily: 'Poppins-Regular', color: Colors.white)),
-        backgroundColor: Colors.blue.shade900,
+        backgroundColor: Colors.blue.shade900
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -67,7 +67,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                   labelText: 'Title',
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) => v == null || v.trim().isEmpty ? 'Title can’t be empty' : null,
+                validator: (v) => v == null || v.trim().isEmpty ? 'Title can’t be empty' : null
               ),
 
               const SizedBox(height: 12),
@@ -79,7 +79,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                   labelText: 'Description',
                   border: OutlineInputBorder(),
                 ),
-                validator: (v) => v == null || v.trim().isEmpty ? 'Description can’t be empty' : null,
+                validator: (v) => v == null || v.trim().isEmpty ? 'Description can’t be empty' : null
               ),
 
               const SizedBox(height: 12),
@@ -88,8 +88,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                 decoration: InputDecoration(
                   labelText: 'Date',
                   border: const OutlineInputBorder(),
-                  errorText: _autoValidate == AutovalidateMode.always &&
-                      selectedDate == null ? 'Date can’t be empty' : null,
+                  errorText: _autoValidate == AutovalidateMode.always && selectedDate == null ? 'Date can’t be empty' : null
                 ),
                 child: InkWell(
                   onTap: () async
@@ -108,8 +107,8 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                   child: Text(
                     selectedDate == null ? 'Select Date' : dateFormat.format(selectedDate!),
                       style: TextStyle(fontFamily: 'Poppins-Regular')
-                  ),
-                ),
+                  )
+                )
               ),
 
               const SizedBox(height: 12),
@@ -118,15 +117,13 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                 decoration: InputDecoration(
                   labelText: 'Start Time',
                   border: const OutlineInputBorder(),
-                  errorText: _autoValidate == AutovalidateMode.always &&
-                      startTime == null ? 'Start time required' : null,
+                  errorText: _autoValidate == AutovalidateMode.always && startTime == null ? 'Start time required' : null
                 ),
                 child: InkWell(
                   onTap: () async
                   {
                     final time = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
+                      context: context, initialTime: TimeOfDay.now(),
                     );
                     if (time != null)
                     {
@@ -134,17 +131,13 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                     }
                   },
                   child: Text(
-                    startTime == null
-                        ? 'Select Start Time'
-                        : timeFormat.format(
-                      DateTime(0, 0, 0,
-                        startTime!.hour,
-                        startTime!.minute,
-                      ),
+                    startTime == null ? 'Select Start Time' : timeFormat.format(
+                      DateTime(0, 0, 0, startTime!.hour, startTime!.minute,
+                      )
                     ),
                       style: TextStyle(fontFamily: 'Poppins-Regular')
-                  ),
-                ),
+                  )
+                )
               ),
 
               const SizedBox(height: 12),
@@ -155,14 +148,14 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                   border: const OutlineInputBorder(),
                   errorText: _autoValidate == AutovalidateMode.always
                       ? endTime == null ? 'End time required'
-                      : !isEndAfterStart() ? 'End time must be after start' : null : null,
+                      : !isEndAfterStart() ? 'End time must be after start' : null : null
                 ),
                 child: InkWell(
                   onTap: () async
                   {
                     final time = await showTimePicker(
                       context: context,
-                      initialTime: TimeOfDay.now(),
+                      initialTime: TimeOfDay.now()
                     );
                     if (time != null)
                     {
@@ -171,10 +164,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                   },
                   child: Text(
                     endTime == null ? 'Select End Time' : timeFormat.format(
-                      DateTime(0, 0, 0,
-                        endTime!.hour,
-                        endTime!.minute,
-                      ),
+                      DateTime(0, 0, 0, endTime!.hour, endTime!.minute)
                     ),
                     style: TextStyle(fontFamily: 'Poppins-Regular',)
                   ),
@@ -191,7 +181,7 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
-                    ),
+                    )
                   ),
                   onPressed: ()
                   {
@@ -215,24 +205,24 @@ class _AddTaskScreenState extends State<AddTaskScreen>
                         DateTime(0, 0, 0,
                           startTime!.hour,
                           startTime!.minute,
-                        ),
+                        )
                       ),
                       'endTime': timeFormat.format(
                         DateTime(0, 0, 0,
                           endTime!.hour,
                           endTime!.minute,
-                        ),
+                        )
                       ),
                       'color': getRandomColor(),
                     });
                   },
                   child: const Text('Create Task', style: TextStyle(fontFamily: 'Poppins-Regular', color: Colors.white)),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+                )
+              )
+            ]
+          )
+        )
+      )
     );
   }
 }

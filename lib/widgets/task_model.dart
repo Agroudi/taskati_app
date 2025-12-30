@@ -11,6 +11,6 @@ class TaskModel
     required this.title,
     required this.description,
     required this.dateTime,
-    required this.color,
+    required this.color
   });
 }

@@ -14,7 +14,7 @@ class TaskCard extends StatelessWidget
     required this.title,
     required this.subtitle,
     required this.startTime,
-    required this.endTime,
+    required this.endTime
   });
 
   @override
@@ -37,8 +37,8 @@ class TaskCard extends StatelessWidget
               fontFamily: 'Poppins-Regular',
               color: Colors.white,
               fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+              fontWeight: FontWeight.bold
+            )
           ),
           if (subtitle.isNotEmpty)
             Padding(
@@ -50,9 +50,9 @@ class TaskCard extends StatelessWidget
                 style: const TextStyle(
                   fontFamily: 'Poppins-Regular',
                   color: Colors.white70,
-                  fontSize: 14,
-                ),
-              ),
+                  fontSize: 14
+                )
+              )
             ),
           const SizedBox(height: 12),
           Row(
@@ -61,12 +61,12 @@ class TaskCard extends StatelessWidget
               const SizedBox(width: 6),
               Text(
                 '$startTime  →  $endTime',
-                style: const TextStyle(color: Colors.white70, fontSize: 13, fontFamily: 'Poppins-Regular',),
-              ),
-            ],
-          ),
-        ],
-      ),
+                style: const TextStyle(color: Colors.white70, fontSize: 13, fontFamily: 'Poppins-Regular')
+              )
+            ]
+          )
+        ]
+      )
     );
   }
 }

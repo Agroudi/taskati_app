@@ -76,7 +76,7 @@ class _AuthScreenState extends State<AuthScreen>
                       : null),
                   child: (photo == null && AppUser.imagePath == null)
                       ? Icon(Icons.person_rounded, size: 170, color: Colors.blue.shade900)
-                      : null,
+                      : null
                 ),
                 const SizedBox(height: 27),
                 AppButton(title: 'Upload From Camera', onPressed: openCamera),
@@ -91,21 +91,21 @@ class _AuthScreenState extends State<AuthScreen>
                   decoration: InputDecoration(
                     hintText: 'Enter your name',
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10)
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.blue.shade900),
-                    ),
-                  ),
+                      borderSide: BorderSide(color: Colors.blue.shade900)
+                    )
+                  )
                 ),
                 const SizedBox(height: 30),
-                AppButton(title: 'Confirm', onPressed: confirm),
-              ],
-            ),
-          ),
-        ),
-      ),
+                AppButton(title: 'Confirm', onPressed: confirm)
+              ]
+            )
+          )
+        )
+      )
     );
   }
 }
