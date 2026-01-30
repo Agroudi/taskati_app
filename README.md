@@ -62,6 +62,7 @@ Error states highlighted in red for invalid inputs
 
 Responsive layout for different screen sizes
 
+📁 Project Structure
 lib/
 │── main.dart
 │── taskati.dart
@@ -86,6 +87,7 @@ lib/
 assets/
 │── fonts/
 │── images/
+
 
 ⚙️ Installation & Setup
 1️⃣ Clone the repository
