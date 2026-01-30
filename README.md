@@ -1,12 +1,12 @@
-**🗂️ Taskati – Task Management App (Flutter)
-📌 Overview**
+<h1>**🗂️ Taskati – Task Management App (Flutter)
+📌 Overview**</h1>
 
 Taskati is a lightweight and efficient task management application built with Flutter.
 It helps users organize daily tasks with precise scheduling, validation, and persistent local storage.
 
 The app is fully offline-capable and designed with a clean, modern UI following Material Design principles.
 
-**🚀 Features**
+<h1>**🚀 Features**</h1>
 
 Create tasks with title, description, date, start time, and end time
 
@@ -20,7 +20,7 @@ Persistent local storage using Hive
 
 Clean and minimal UI focused on usability
 
-**🧠 Local Storage (Hive)**
+<h1>**🧠 Local Storage (Hive)**</h1>
 
 Hive is used as the local NoSQL database
 
@@ -30,7 +30,7 @@ Data remains saved even after app restarts
 
 Hive provides high performance without requiring SQL or internet access
 
-**🧩 Widgets & Packages Used**
+<h1>**🧩 Widgets & Packages Used**</h1>
 
 Scaffold – App layout structure
 
@@ -50,7 +50,7 @@ Hive & hive_flutter – Local database
 
 Material widgets – UI styling and theming
 
-**🎨 UI & Design**
+<h1>**🎨 UI & Design**</h1>
 
 Material Design-based layout
 
@@ -62,7 +62,7 @@ Error states highlighted in red for invalid inputs
 
 Responsive layout for different screen sizes
 
-**📁 Project Structure**
+<h1>**📁 Project Structure**</h1>
 
 lib/
 │── main.dart
@@ -90,7 +90,7 @@ assets/
 │── images/
 
 
-**⚙️ Installation & Setup**
+<h1>**⚙️ Installation & Setup**</h1>
 1️⃣ Clone the repository
 git clone https://github.com/your-username/taskati.git
 
@@ -100,7 +100,7 @@ flutter pub get
 3️⃣ Run the app
 flutter run
 
-**📱 Requirements**
+<h1>**📱 Requirements**</h1>
 
 Flutter SDK
 
