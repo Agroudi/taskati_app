@@ -111,5 +111,9 @@ Android Studio / VS Code
 Android or iOS emulator (or physical device)
 
 
-https://github.com/user-attachments/assets/6b87decd-9a24-43ec-b41c-f4c5c4e97ac6
+
+
+https://github.com/user-attachments/assets/7b575566-bef8-4dfb-9726-fa7e2a881a47
+
+
 
