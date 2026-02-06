@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskati_app/screens/home_screen.dart';
 import 'package:taskati_app/widgets/app_button.dart';
@@ -37,23 +39,33 @@ class _AuthScreenState extends State<AuthScreen>
     if (picked != null) setState(() => photo = picked);
   }
 
-  void confirm() async
-  {
+  Future<String> saveImagePermanently(String imagePath) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final fileName = path.basename(imagePath);
+    final savedImage = await File(imagePath).copy('${directory.path}/$fileName');
+    return savedImage.path;
+  }
+
+
+  void confirm() async {
     if (nameController.text.trim().isEmpty) return;
 
     AppUser.name = nameController.text.trim();
 
-    if (photo != null) AppUser.setImagePath(photo!.path);
-
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('user_name', AppUser.name);
-    if (photo != null) await prefs.setString('user_photo', AppUser.imagePath!);
 
-    Navigator.pushReplacement(
-      context,
+    if (photo != null) {
+      final permanentPath = await saveImagePermanently(photo!.path);
+      AppUser.setImagePath(permanentPath);
+      await prefs.setString('user_photo', permanentPath);
+    }
+
+    Navigator.pushReplacement(context,
       MaterialPageRoute(builder: (_) => const HomeScreen()),
     );
   }
+
 
   @override
   Widget build(BuildContext context)
