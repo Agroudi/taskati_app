@@ -139,25 +139,20 @@ class _HomeScreenState extends State<HomeScreen>
                         const Spacer(),
                         GestureDetector(
                           onTap: () async {
-                            final updated = await Navigator.push(
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (_) => const UploadProfileScreen(),
                               ),
                             );
-
-                            if (updated == true) {
-                              setState(() {});
-                            }
+                            setState(() {});
                           },
                           child: CircleAvatar(
                             radius: 30,
                             backgroundImage: AppUser.image,
-                            child: AppUser.image == null
-                                ? const Icon(Icons.person)
-                                : null,
+                            child: AppUser.image == null ? const Icon(Icons.person) : null,
                           ),
-                        )
+                        ),
 
                       ]
                   ),
