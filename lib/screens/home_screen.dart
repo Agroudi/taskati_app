@@ -105,232 +105,234 @@ class _HomeScreenState extends State<HomeScreen>
     final today = DateTime.now();
 
     return Scaffold(
-        body: Padding(
-            padding: const EdgeInsets.only(top: 10, left: 16, right: 16),
-            child: Column(
-                children: [
-                  Row(
-                      children: [
-                        Column(
+        body: SafeArea(
+          child: Padding(
+              padding: const EdgeInsets.only(top: 10, left: 16, right: 16),
+              child: Column(
+                  children: [
+                    Row(
+                        children: [
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    'Hello! ${AppUser.name}',
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-Regular',
+                                        color: Colors.blue.shade900,
+                                        fontSize: 19,
+                                        fontWeight: FontWeight.bold
+                                    )
+                                ),
+                                const SizedBox(height: 4),
+                                const Text(
+                                    'Have A Nice Day.',
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 16,
+                                        fontFamily: 'Poppins-Regular'
+                                    )
+                                )
+                              ]
+                          ),
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const UploadProfileScreen(),
+                                ),
+                              );
+                              setState(() {});
+                            },
+                            child: CircleAvatar(
+                              radius: 30,
+                              backgroundImage: AppUser.image,
+                              child: AppUser.image == null ? const Icon(Icons.person) : null,
+                            ),
+                          ),
+          
+                        ]
+                    ),
+          
+                    const SizedBox(height: 24),
+          
+                    Row(
+                        children: [
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  'Hello! ${AppUser.name}',
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                      fontFamily: 'Poppins-Regular',
-                                      color: Colors.blue.shade900,
-                                      fontSize: 19,
-                                      fontWeight: FontWeight.bold
+                                  "${today.day} ${_monthName(today.month)}, ${today.year}",
+                                  style: const TextStyle(
+                                    fontFamily: 'Poppins-Regular',
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
                                   )
                               ),
                               const SizedBox(height: 4),
                               const Text(
-                                  'Have A Nice Day.',
+                                  "Today",
                                   style: TextStyle(
                                       color: Colors.grey,
-                                      fontSize: 16,
                                       fontFamily: 'Poppins-Regular'
                                   )
                               )
-                            ]
-                        ),
-                        const Spacer(),
-                        GestureDetector(
-                          onTap: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const UploadProfileScreen(),
-                              ),
-                            );
-                            setState(() {});
-                          },
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundImage: AppUser.image,
-                            child: AppUser.image == null ? const Icon(Icons.person) : null,
+                            ],
                           ),
-                        ),
-
-                      ]
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                "${today.day} ${_monthName(today.month)}, ${today.year}",
-                                style: const TextStyle(
-                                  fontFamily: 'Poppins-Regular',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                )
-                            ),
-                            const SizedBox(height: 4),
-                            const Text(
-                                "Today",
+          
+                          const Spacer(),
+          
+                          ElevatedButton(
+                              onPressed: () async
+                              {
+                                final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const AddTaskScreen())
+                                );
+          
+                                if (result != null)
+                                {
+                                  setState(()
+                                  {
+                                    tasks.add(result);
+                                  });
+                                  await saveTasks();
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue.shade900,
+                                  elevation: 0,
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)
+                                  )
+                              ),
+                              child: const Text(
+                                  "+ Add Task",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontFamily: 'Poppins-Regular'
+                                  )
+                              )
+                          )
+                        ]
+                    ),
+          
+                    const SizedBox(height: 20),
+          
+                    SizedBox(
+                        height: 110,
+                        child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 30,
+                            itemBuilder: (context, index)
+                            {
+                              final date = DateTime.now().add(Duration(days: index));
+                              final isSelected =
+                                  date.year == selectedDate.year &&
+                                      date.month == selectedDate.month &&
+                                      date.day == selectedDate.day;
+                              return Padding(
+                                  padding: const EdgeInsets.only(right: 12),
+                                  child: GestureDetector(
+                                      onTap: () => selectDate(date),
+                                      child: DateItem(
+                                          month: _monthAbbr(date.month),
+                                          day: date.day.toString(),
+                                          weekDay: _weekDayAbbr(date.weekday),
+                                          isSelected: isSelected
+                                      )
+                                  )
+                              );
+                            }
+                        )
+                    ),
+          
+                    const SizedBox(height: 20),
+          
+                    Expanded(
+                        child: filteredTasks.isEmpty
+                            ? const Center(
+                            child: Text(
+                                'No tasks yet',
                                 style: TextStyle(
                                     color: Colors.grey,
                                     fontFamily: 'Poppins-Regular'
                                 )
                             )
-                          ],
-                        ),
-
-                        const Spacer(),
-
-                        ElevatedButton(
-                            onPressed: () async
-                            {
-                              final result = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const AddTaskScreen())
-                              );
-
-                              if (result != null)
-                              {
-                                setState(()
-                                {
-                                  tasks.add(result);
-                                });
-                                await saveTasks();
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue.shade900,
-                                elevation: 0,
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)
-                                )
-                            ),
-                            child: const Text(
-                                "+ Add Task",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontFamily: 'Poppins-Regular'
-                                )
-                            )
                         )
-                      ]
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  SizedBox(
-                      height: 110,
-                      child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 30,
-                          itemBuilder: (context, index)
-                          {
-                            final date = DateTime.now().add(Duration(days: index));
-                            final isSelected =
-                                date.year == selectedDate.year &&
-                                    date.month == selectedDate.month &&
-                                    date.day == selectedDate.day;
-                            return Padding(
-                                padding: const EdgeInsets.only(right: 12),
-                                child: GestureDetector(
-                                    onTap: () => selectDate(date),
-                                    child: DateItem(
-                                        month: _monthAbbr(date.month),
-                                        day: date.day.toString(),
-                                        weekDay: _weekDayAbbr(date.weekday),
-                                        isSelected: isSelected
-                                    )
-                                )
-                            );
-                          }
-                      )
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  Expanded(
-                      child: filteredTasks.isEmpty
-                          ? const Center(
-                          child: Text(
-                              'No tasks yet',
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontFamily: 'Poppins-Regular'
-                              )
-                          )
-                      )
-                          : ListView.separated(
-                          itemCount: filteredTasks.length,
-                          separatorBuilder: (_, __) => const SizedBox(height: 16),
-                          itemBuilder: (context, index)
-                          {
-                            final task = filteredTasks[index];
-
-                            return Dismissible(
-                              key: ValueKey(task),
-                              direction: DismissDirection.horizontal,
-                              background: Container(
-                                padding: const EdgeInsets.only(left: 16),
-                                alignment: Alignment.centerLeft,
-                                decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(18)
-                                ),
-                                child: const Icon(Icons.delete, color: Colors.white),
-                              ),
-
-                              secondaryBackground: Container(
-                                padding: const EdgeInsets.only(right: 16),
-                                alignment: Alignment.centerRight,
-                                decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(18)
-                                ),
-                                child: const Icon(Icons.check, color: Colors.white),
-                              ),
-
-                              confirmDismiss: (direction) async
-                              {
-                                if (direction == DismissDirection.startToEnd)
-                                {
-                                  setState(()
-                                  {
-                                    tasks.remove(task);
-                                  });
-                                  await saveTasks();
-                                  return true;
-                                }
-                                else
-                                {
-                                  await toggleTaskCompleted(task);
-                                  return false;
-                                }
-                              },
-
-                              child: Stack(
-                                children: [
-                                  TaskCard(
-                                    color: task['color'] as Color,
-                                    title: task['title'] as String,
-                                    subtitle: task['subtitle'] as String,
-                                    startTime: task['startTime'] as String,
-                                    endTime: task['endTime'] as String,
-                                    isCompleted: task['completed'] ?? false,
+                            : ListView.separated(
+                            itemCount: filteredTasks.length,
+                            separatorBuilder: (_, __) => const SizedBox(height: 16),
+                            itemBuilder: (context, index)
+                            {
+                              final task = filteredTasks[index];
+          
+                              return Dismissible(
+                                key: ValueKey(task),
+                                direction: DismissDirection.horizontal,
+                                background: Container(
+                                  padding: const EdgeInsets.only(left: 16),
+                                  alignment: Alignment.centerLeft,
+                                  decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(18)
                                   ),
-                                ],
-                              ),
-                            );
-                          }
-                      )
-                  )
-                ]
-            )
+                                  child: const Icon(Icons.delete, color: Colors.white),
+                                ),
+          
+                                secondaryBackground: Container(
+                                  padding: const EdgeInsets.only(right: 16),
+                                  alignment: Alignment.centerRight,
+                                  decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(18)
+                                  ),
+                                  child: const Icon(Icons.check, color: Colors.white),
+                                ),
+          
+                                confirmDismiss: (direction) async
+                                {
+                                  if (direction == DismissDirection.startToEnd)
+                                  {
+                                    setState(()
+                                    {
+                                      tasks.remove(task);
+                                    });
+                                    await saveTasks();
+                                    return true;
+                                  }
+                                  else
+                                  {
+                                    await toggleTaskCompleted(task);
+                                    return false;
+                                  }
+                                },
+          
+                                child: Stack(
+                                  children: [
+                                    TaskCard(
+                                      color: task['color'] as Color,
+                                      title: task['title'] as String,
+                                      subtitle: task['subtitle'] as String,
+                                      startTime: task['startTime'] as String,
+                                      endTime: task['endTime'] as String,
+                                      isCompleted: task['completed'] ?? false,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                        )
+                    )
+                  ]
+              )
+          ),
         )
     );
   }
