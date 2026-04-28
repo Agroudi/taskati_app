@@ -62,32 +62,36 @@ Error states highlighted in red for invalid inputs
 
 Responsive layout for different screen sizes
 
-<h1>📁 Project Structure</h1>
+<h1>🏗️ Architectural Overview</h1>
 
-lib/
-│── main.dart
-│── taskati.dart
+project_root/
 │
-├── screens/
-│   ├── home_screen.dart
-│   ├── add_task_screen.dart
+├── assets/
+│   ├── fonts/              # Custom fonts used in the app
+│   │   ├── poppins/
+│   │   ├── dm_sans/
+│   │   └── ...
+│   └── images/             # Static images
 │
-├── widgets/
-│   ├── task_card.dart
-│   ├── app_button.dart
-│
-├── models/
-│   ├── task_model.dart
-│
-├── services/
-│   ├── hive_service.dart
-│
-├── utils/
-│   ├── colors.dart
-│
-assets/
-│── fonts/
-│── images/
+├── lib/
+│   ├── screens/            # App screens (UI)
+│   │   ├── auth_screen.dart
+│   │   ├── home_screen.dart
+│   │   ├── add_task_screen.dart
+│   │   └── upload_profile_screen.dart
+│   │
+│   ├── widgets/            # Reusable UI components
+│   │   ├── task_container.dart
+│   │   ├── date_container.dart
+│   │   ├── app_button.dart
+│   │   └── app_user.dart
+│   │
+│   ├── models/             # Data models
+│   │   └── task_model.dart
+│   │
+│   ├── services/           # Data handling (Hive, SharedPreferences)
+│   │
+│   └── main.dart           # Entry point
 
 
 <h1>⚙️ Installation & Setup</h1>
