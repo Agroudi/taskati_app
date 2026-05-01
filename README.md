@@ -64,6 +64,7 @@ Responsive layout for different screen sizes
 
 <h1>🏗️ Architectural Overview</h1>
 
+```text
 project_root/
 │
 ├── assets/
@@ -92,7 +93,7 @@ project_root/
 │   ├── services/           # Data handling (Hive, SharedPreferences)
 │   │
 │   └── main.dart           # Entry point
-
+```
 
 <h1>⚙️ Installation & Setup</h1>
 1️⃣ Clone the repository
