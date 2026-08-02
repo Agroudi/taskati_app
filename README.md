@@ -1,3 +1,6 @@
+
+https://github.com/user-attachments/assets/7b575566-bef8-4dfb-9726-fa7e2a881a47
+
 <h1>🗂️ Taskati – Task Management App (Flutter)
 📌 Overview</h1>
 
@@ -114,11 +117,3 @@ Dart SDK
 Android Studio / VS Code
 
 Android or iOS emulator (or physical device)
-
-
-
-
-https://github.com/user-attachments/assets/7b575566-bef8-4dfb-9726-fa7e2a881a47
-
-
-
