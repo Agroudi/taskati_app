@@ -1,5 +1,10 @@
+<h1>🎥 App Demo</h1>
 
 https://github.com/user-attachments/assets/7b575566-bef8-4dfb-9726-fa7e2a881a47
+
+<p align="center">
+Watch the latest application demo showcasing the full shopping flow, authentication with OTP, cart & wishlist, order placement, Arabic/English localization, and the Lottie-driven loading experience.
+</p>
 
 <h1>🗂️ Taskati – Task Management App (Flutter)
 📌 Overview</h1>
